@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hello WebSocket</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="/main.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.4.0/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="/app.js"></script>
+</head>
+<body>
+<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
+    enabled. Please enable
+    Javascript and reload this page!</h2></noscript>
+<div id="main-content" class="container">
+
+
+    <div class="form-group">
+        <table class="table">
+            <tbody>
+            <tr>
+                <td><label class="checkbox-inline"><input type="checkbox" name=type value="BTC-USD">BTC-USD</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" name=type value="BTC-EUR">BTC-EUR</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" name=type value="BTC-IOTA">BTC-IOTA</label>
+                </td>
+                <td><label class="checkbox-inline"><input type="checkbox" name=type value="BTC-EOS">BTC-EOS</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" name=type value="BTC-GBP">BTC-GBP</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" name=type value="BTC-JPY">BTC-JPY</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" name=type value="BTC-RRT">BTC-RRT</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" name=type value="BTC-ETC">BTC-ETC</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" name=type value="BTC-ZEC">BTC-ZEC</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" name=type value="BTC-LTC">BTC-LTC</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" name=type value="BTC-DASH">BTC-DASH</label>
+                </td>
+                <td><label class="checkbox-inline"><input type="checkbox" name=type value="BTC-XMR">BTC-XMR</label></td>
+            </tr>
+
+            <tr>
+                <td><label class="checkbox-inline"> <input type="checkbox" value="">ETH-USD</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">ETH-EUR</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">ETH-IOTA</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">ETH-EOS</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">ETH-GBP</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">ETH-JPY</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">JPY-NEO</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">JPY-XLM</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">JPY-XVG</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">JPY-TRX</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">JPY-IOTA</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">JPY-EOS</label></td>
+            </tr>
+            <tr>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">USD-ETC</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">USD-EUR</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">USD-IOTA</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">USD-EOS</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">USD-RRT</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">USD-ETC</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">USD-ZEC</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">USD-LTC</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">USD-DASH</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">USD-XMR</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">USD-DASH</label></td>
+                <td><label class="checkbox-inline"><input type="checkbox" value="">USD-XRP</label></td>
+            </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="connect">WebSocket connection:</label>
+                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
+                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="name">Which pair to display prices for?</label>
+                    <input type="text" id="name" class="form-control" placeholder="Your name here...">
+                </div>
+                <button id="send" class="btn btn-default" type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <button id="subscribe" class="btn btn-default" type="submit">Subscribe</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <form class="form-inline">
+                <div class="form-group">
+                    <button id="stop_timer" class="btn btn-default" type="submit">Stop Sending</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <table id="subscribtion_products" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Subscription Products</th>
+                </tr>
+                </thead>
+                <tbody id="greetings2">
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <table id="prices_of_products" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>| coinbaseProductID | Coinbase Price| Bitfinex Price|;</th>
+                </tr>
+                </thead>
+                <tbody id="prices">
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <table id="example-table" class="table table-striped">
+
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table id="products_tosubscribe" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Products</th>
+                </tr>
+                </thead>
+                <tbody id="products">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+</div>
+</body>
+</html>
